@@ -1,4 +1,6 @@
 import * as fs from 'fs';
+import { uuid } from 'uuidv4';
+
 
 // DONE: Define a City class with name and id properties
 class City {
@@ -14,29 +16,21 @@ constructor(id: string, name: string) {
 
 // // TODO: Complete the HistoryService class
 class HistoryService {
-  // TODO: Define a read method that reads from the searchHistory.json file
-  // private async read() {}
-  // // TODO: Define a write method that writes the updated cities array to the searchHistory.json file
-  // private async write(cities: City[]) {
-
-  // }
-  // TODO: Define a getCities method that reads the cities from the searchHistory.json file and returns them as an array of City objects
-  async getCities(): Promise<City[]> {
-    let cityArr: City[] = [];
-    fs.readFile('./db/searchHistory.json', 'utf8', function (_, data) {
-      // Display the file content
-      console.log(data);
-      const cities = JSON.parse(data);
-      console.log('GET === cities', cities);
-      cityArr = [...cities]
-    });
-    return cityArr;
+  async getCities(): Promise<City []> {
+    const cities = fs.readFileSync('./db/searchHistory.json').toString() 
+    return JSON.parse(cities);
   }
   // TODO Define an addCity method that adds a city to the searchHistory.json file
   async addCity(city: string) {
-    const cities = await this.getCities();
-    console.log('cities', cities);
-    let newCity = new City(city, city); 
+   let cities = await this.getCities();
+    cities = cities.filter((cityObj) => cityObj.name.toLocaleLowerCase() !== city.toLocaleLowerCase())
+        // cities = cities.filter((cityObj) => {
+    //   if (cityObj.name.toLocaleLowerCase() !== city.toLocaleLowerCase()) {
+    //     return cityObj;
+    //   }
+    //   return;
+    // });
+    let newCity = new City(uuid(), city); 
     cities.push(newCity)
     fs.writeFile('./db/searchHistory.json', JSON.stringify(cities), err => {
       if (err) {

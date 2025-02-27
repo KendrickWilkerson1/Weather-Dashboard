@@ -62,14 +62,12 @@ class WeatherService {
         `${this.baseURL}/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${this.apiKey}`
       );
       const weatherData = await response.json();
-      console.log('weatherData', weatherData)
       const currentWeather = this.parseCurrentWeather(weatherData);
       const forecastArray = this.buildForecastArray(weatherData.list);
       const data = {
         currentWeather, 
         forecastArray
       };
-      // console.log(weatherData);
       // return this.parseCurrentWeather(weatherData);
       return data;
     } catch (err) {
@@ -82,13 +80,12 @@ class WeatherService {
     const weatherObj = {
       city: response.city.name, 
       date: this._dateFormat(response.list[0].dt_txt), 
-      icon: response.list[2].weather[0].icon, 
-      iconDescription: response.list[2].weather[0].description, 
-      tempF: this._tempConversion(response.list[2].main.temp), 
-      windSpeed: response.list[2].wind.speed, 
-      humidity: response.list[2].main.humidity
+      icon: response.list[0].weather[0].icon, 
+      iconDescription: response.list[0].weather[0].description, 
+      tempF: this._tempConversion(response.list[0].main.temp), 
+      windSpeed: response.list[0].wind.speed, 
+      humidity: response.list[0].main.humidity
     }
-    console.log('weatherObj', weatherObj);
     return weatherObj;
     
   }
@@ -98,10 +95,9 @@ class WeatherService {
   }
   // // TODO: Complete buildForecastArray method
   private buildForecastArray(weatherData: any[]) {
-    console.log('weatherData.list', weatherData)
     let array = [];
     const increment = this._incrementBy(weatherData[0].dt_txt)
-    for (let i = 0+increment; i <= 40; i+=8){
+    for (let i = 0+increment; i <= 39; i+=8){
       const forcastObj = {
         tempF: this._tempConversion(weatherData[i].main.temp), 
         date: this._dateFormat(weatherData[i].dt_txt), 
@@ -130,11 +126,6 @@ class WeatherService {
     return increment;
   }
 };
-
-//     const parks = await response.json();
-
-//     const mappedParks = await this.parkDataMapping(parks.data);
-//     return mappedParks;
 
 export default new WeatherService();
 

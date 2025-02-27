@@ -3,10 +3,10 @@ const router = Router();
 
 import HistoryService from '../../service/historyService.js';
 import WeatherService from '../../service/weatherService.js';
+import historyService from '../../service/historyService.js';
 
 // DONE: POST Request with city name to retrieve weather data
 router.post('/', async (req: Request, res: Response) => {
-  console.log('API Call')
   const {cityName} = req.body;
   if (req.body) {
     const weatherData = await WeatherService.getWeatherForCity(cityName);
@@ -24,7 +24,10 @@ router.post('/', async (req: Request, res: Response) => {
 //   // TODO: save city to search history
 // });
 // TODO: GET search history
-// router.get('/history', async (req: Request, res: Response) => {});
+  
+router.get('/history', async (_, res: Response) => {
+  res.json(await historyService.getCities());
+});
 
 // * BONUS TODO: DELETE city from search history
 // router.delete('/history/:id', async (req: Request, res: Response) => {});
