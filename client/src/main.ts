@@ -45,14 +45,13 @@ const fetchWeather = async (cityName: string) => {
 
   const weatherData = await response.json();
 
-  console.log('weatherData: ', weatherData);
 
   renderCurrentWeather(weatherData.currentWeather);
   renderForecast(weatherData.forecastArray);
 };
 
 const fetchSearchHistory = async () => {
-  const history = await fetch('/api/weather/history', {
+   const history = await fetch('/api/weather/history', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
